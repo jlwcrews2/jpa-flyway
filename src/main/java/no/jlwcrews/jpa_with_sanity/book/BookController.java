@@ -25,10 +25,17 @@ public class BookController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/paged/{page}")
+    public ResponseEntity<List<Book>> getAllBooks(@PathVariable int page) {
+        return ResponseEntity.ok(bookService.getBooksByPage(page));
+    }
+
     @GetMapping
     public ResponseEntity<List<Book>> getBooks() {
         var result = bookService.getBooks();
-        if (result == null || result.isEmpty()) return ResponseEntity.notFound().build();
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(result);
     }
 
@@ -49,4 +56,6 @@ public class BookController {
         testData.createTestData();
         return ResponseEntity.ok("Books initialized.");
     }
+
+
 }

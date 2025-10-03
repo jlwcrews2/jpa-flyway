@@ -1,8 +1,11 @@
 package no.jlwcrews.jpa_with_sanity.book;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import no.jlwcrews.jpa_with_sanity.author.Author;
 import no.jlwcrews.jpa_with_sanity.location.Location;
+
+import java.util.List;
 
 @Entity
 public class Book {
@@ -11,21 +14,28 @@ public class Book {
     @SequenceGenerator(name = "book_seq", sequenceName = "book_seq", allocationSize = 1)
     private Long id;
     private String title;
-    private String author;
 
     @ManyToOne()
     @JoinColumn(name = "location_id")
     private Location location;
 
+    @ManyToMany
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    @JsonIgnoreProperties("books")
+    private List<Author> authors;
+
     public Book() {
     }
 
-    public Book(String title, String author, Location location) {
+    public Book(String title, Location location, List<Author> authors) {
         this.title = title;
-        this.author = author;
         this.location = location;
+        this.authors = authors;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -43,19 +53,19 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public Location getLocation() {
         return location;
     }
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 }
