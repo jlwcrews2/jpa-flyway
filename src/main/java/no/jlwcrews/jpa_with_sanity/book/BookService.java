@@ -2,9 +2,11 @@ package no.jlwcrews.jpa_with_sanity.book;
 
 import no.jlwcrews.jpa_with_sanity.author.Author;
 import no.jlwcrews.jpa_with_sanity.author.AuthorService;
+import no.jlwcrews.jpa_with_sanity.exception.BookNotFoundException;
 import no.jlwcrews.jpa_with_sanity.location.LocationService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class BookService {
     }
 
     public Book getBook(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
     }
 
     public List<Book> getBooks() {
@@ -47,4 +49,5 @@ public class BookService {
     public void deleteBook(Long id) {
         repo.deleteById(id);
     }
+
 }

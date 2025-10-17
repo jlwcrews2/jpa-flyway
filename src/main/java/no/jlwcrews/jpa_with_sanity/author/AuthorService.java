@@ -1,5 +1,6 @@
 package no.jlwcrews.jpa_with_sanity.author;
 
+import no.jlwcrews.jpa_with_sanity.exception.AuthorNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class AuthorService {
     }
 
     public Author getAuthor(Long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(() -> new AuthorNotFoundException("Author with id " + id + " not found"));
     }
 
     public List<Author> getAuthors() {
