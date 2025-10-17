@@ -3,6 +3,7 @@ package no.jlwcrews.jpa_with_sanity.book;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import no.jlwcrews.jpa_with_sanity.author.Author;
+import no.jlwcrews.jpa_with_sanity.bookevent.BookEvent;
 import no.jlwcrews.jpa_with_sanity.location.Location;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class Book {
     @ManyToOne()
     @JoinColumn(name = "location_id")
     private Location location;
+
+    @OneToMany
+    private List<BookEvent> events;
 
     @ManyToMany
     @JoinTable(

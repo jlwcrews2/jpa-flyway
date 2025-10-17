@@ -5,6 +5,9 @@ import no.jlwcrews.jpa_with_sanity.author.Author;
 import no.jlwcrews.jpa_with_sanity.author.AuthorRepo;
 import no.jlwcrews.jpa_with_sanity.book.Book;
 import no.jlwcrews.jpa_with_sanity.book.BookRepo;
+import no.jlwcrews.jpa_with_sanity.bookevent.BookEvent;
+import no.jlwcrews.jpa_with_sanity.bookevent.BookEventRepository;
+import no.jlwcrews.jpa_with_sanity.bookevent.BookEventType;
 import no.jlwcrews.jpa_with_sanity.location.Location;
 import no.jlwcrews.jpa_with_sanity.location.LocationRepo;
 import org.springframework.stereotype.Service;
@@ -19,12 +22,14 @@ public class TestData {
     private final LocationRepo locationRepo;
     private final BookRepo bookRepo;
     private final AuthorRepo authorRepo;
+    private final BookEventRepository bookEventRepo;
     private final Faker faker = new Faker();
 
-    public TestData(LocationRepo locationRepo, BookRepo bookRepo, AuthorRepo authorRepo) {
+    public TestData(LocationRepo locationRepo, BookRepo bookRepo, AuthorRepo authorRepo, BookEventRepository bookEventRepo) {
         this.locationRepo = locationRepo;
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
+        this.bookEventRepo = bookEventRepo;
     }
 
     public void createTestData(){
@@ -37,13 +42,18 @@ public class TestData {
                 var randomAuthor = new Random().nextInt(authors.size());
                 bookAuthors.add(authors.get(randomAuthor));
             }
-            bookRepo.save(
+            var book = bookRepo.save(
                     new Book(
                             faker.book().title(),
                             location,
                             bookAuthors
                     )
             );
+            bookEventRepo.save(new BookEvent(
+                    BookEventType.ACQUIRED,
+                    5L,
+                    book
+            ));
 
         }
     }
