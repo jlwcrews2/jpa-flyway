@@ -2,11 +2,21 @@ package no.jlwcrews.jpa_with_sanity.author;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import no.jlwcrews.jpa_with_sanity.book.Book;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.NonNull;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_seq")
@@ -14,13 +24,17 @@ public class Author {
     private Long id;
     private String firstName;
     private String lastName;
+    @NonNull
     private String email;
+
+    @CreatedDate
+    private LocalDateTime created;
 
     @ManyToMany(mappedBy = "authors")
     @JsonIgnoreProperties("authors")
     private List<Book> books;
 
-    public Author(String firstName, String lastName, String email, List<Book> books) {
+    public Author(String firstName, String lastName, @NonNull String email, List<Book> books) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -31,43 +45,4 @@ public class Author {
 
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
 }
